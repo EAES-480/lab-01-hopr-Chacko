@@ -13,12 +13,12 @@ Fill in the chunk below. The autograder will check that these objects exist and 
 
 ```{r checkpoints, include=TRUE}
 # REQUIRED: put your info here
-student_name <- ""   # e.g., "Jane Doe"
-student_netid <- ""  # e.g., "jdoe23"
+student_name <- "Eli Chacko"   # e.g., "Jane Doe"
+student_netid <- "echac2"  # e.g., "jdoe23"
 
 # REQUIRED: confirm you completed Chapters 1–8 of HOPR in this file
 # Put the chapter numbers you completed (should be 1:8 when finished).
-hopr_completed_chapters <- integer()  # e.g., 1:8
+hopr_completed_chapters <- integer(1:1)  # e.g., 1:8
 
 # OPTIONAL but encouraged: notes about anything that was confusing or interesting
 reflection_notes <- ""  # a sentence or two is fine
@@ -71,28 +71,45 @@ In this chapter we will cover:
 You can assign an object a name and a value as follows
 
 ```{r}
-
+1:6
 ```
 
 ```{r}
+a <- 1
+a
 
+a + 2
 ```
+```{r}
+die <- 1:6
+
+die
+```
+
 
 R also understands capitalization in object names:
 
 ```{r}
+Name <- 1
+name <- 0
 
+Name + 1
 ```
 
 R overwrites previous information without asking permission:
 
 ```{r}
+my_number <- 1
+my_number 
 
+
+my_number <- 999
+my_number
 ```
 
 Look at all the objects you have created using `ls()`:
 ```{r}
-
+ls()
 ```
 
 You can clear all your work space objects using (remove the # first)
@@ -105,13 +122,33 @@ You can clear all your work space objects using (remove the # first)
 You can do all sorts of math with die (a sequence of numeric integers)
 
 ```{r}
+die - 1
+## 0 1 2 3 4 5
 
+die / 2
+## 0.5 1.0 1.5 2.0 2.5 3.0
+
+die * die
+## 1  4  9 16 25 36
 ```
 
 When you multiply two vectors of unequal length, R will repeat the shorter vector to match the long vector (known as 'vector recycling')
 
 ```{r}
+1:2
+## 1 2
 
+1:4
+## 1 2 3 4
+
+die
+## 1 2 3 4 5 6
+
+die + 1:2
+## 2 4 4 6 6 8
+
+die + 1:4
+## 2 4 6 8 6 8
 ```
 
 
@@ -124,7 +161,17 @@ But it will produce an error when the longer objeect is not a multiple of the sh
 You can also do matrix multiplication
 
 ```{r}
+die %*% die
+## 91
 
+die %o% die
+##      [,1] [,2] [,3] [,4] [,5] [,6]
+## [1,]    1    2    3    4    5    6
+## [2,]    2    4    6    8   10   12
+## [3,]    3    6    9   12   15   18
+## [4,]    4    8   12   16   20   24
+## [5,]    5   10   15   20   25   30
+## [6,]    6   12   18   24   30   36
 ```
 
 ### Functions
@@ -132,67 +179,92 @@ You can also do matrix multiplication
 To use a function, just write the name of the function and then the data you want to operate on in the parentheses:
 
 ```{r}
+round(3.1415)
+## 3
 
+factorial(3)
+## 6
 ```
 
 The data you pass the function is called the function's **argument**. The argument can be:
 
 ```{r}
+mean(1:6)
+## 3.5
 
+mean(die)
+## 3.5
+
+round(mean(die))
+## 4
 ```
 
 You can "roll" the dice using the sample function, with arguments `x` (vector/data) and `size` (number of elements to sample):
 
 ```{r}
-
+sample(x = 1:4, size = 2)
+## 3 2
 ```
 
 Roll your die by setting x to `die` and sample 1 number from it:
 
 ```{r}
+sample(x = die, size = 1)
+
+
+sample(x = die, size = 1)
+
+
+sample(x = die, size = 1)
 
 ```
 
 Roll it again:
 
 ```{r}
+sample(x = die, size = 1)
 
+sample(x = die, size = 1)
+
+sample(x = die, size = 1)
 ```
 
 R doesn't require arguments to be named, for example:
 
 ```{r}
-
+sample(die, size = 1)
 ```
 
 And if you use the wrong argument names, you will get an error:
 
 ```{r}
-
+round(3.1415)
 ```
 
 You can look up the function's arguments with `args`:
 
 ```{r}
-
+args(round)
 ```
 
 You can change the default value by assigning a new value to the digits argument:
 
 ```{r}
+round(3.1415)
 
+round(3.1415, digits = 2)
 ```
 
 If you do not write argument names (which is recommended for any arguments after the first 2) then R matches values using the order:
 
 ```{r}
-
+sample(die, 1)
 ```
 
 If you name all your arguments, R doesn't care if you enter them in the non-standard order:
 
 ```{r}
-
+sample(size = 1, x = die)
 ```
 
 ### Sample with replacement
@@ -200,12 +272,12 @@ If you name all your arguments, R doesn't care if you enter them in the non-stan
 By setting the argument size to 2, we can almost simulate the rolling of a pair of dice:
 
 ```{r}
-
+sample(die, size = 2)
 ```
 
 *Almost* like two dice, because if you repeat it many times, you will see that it never selects the same number twice:
 ```{r}
-
+sample(die, size = 2, replace = TRUE)
 ```
 
 In other words, it samples *without* replacement.
@@ -213,7 +285,7 @@ In other words, it samples *without* replacement.
 We need to sample *with* replacement, using the argument `replace = TRUE`:
 
 ```{r}
-
+sample(die, size = 2, replace = TRUE)
 ```
 
 Sampling with replacement is an easy way to create independent random samples.
@@ -223,13 +295,16 @@ Sampling with replacement is an easy way to create independent random samples.
 You can also add up the result of your simulated dice throw if you save the output to the object `dice`, then use the function `sum()` on dice:
 
 ```{r}
+dice <- sample(die, size = 2, replace = TRUE)
+dice
 
+sum(dice)
 ```
 
 Confirm that calling dice won't rerun `sample(die, 2, replace = TRUE)`:
 
 ```{r}
-
+sample(die, 2, replace = TRUE)
 ```
 
 However, you *can* create an object that will re-roll the dice whenever you call it. In R, these are called **Functions**.
@@ -239,25 +314,33 @@ However, you *can* create an object that will re-roll the dice whenever you call
 We will write a function `roll()`, that will return the sum of rolling two dice:
 
 ```{r}
-
+roll <- function() {
+  die <- 1:6
+  dice <- sample(die, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 R returns the last line of the body of code within the function, so make sure the final line of code returns a value:
 
 ```{r}
-
+roll()
 ```
 
 For instance, these lines of code as the final line will return a value:
 
 ```{r}
-
+dice
+1 + 1
+sqrt(2)
 ```
 
 But these lines will not:
 
 ```{r}
-
+dice <- sample(die, size = 2, replace = TRUE)
+two <- 1 + 1
+a <- sqrt(2)
 ```
 
 ### Arguments
@@ -265,7 +348,10 @@ But these lines will not:
 What would happen if we changed our `roll()` function to this?
 
 ```{r}
-
+roll2 <- function() {
+  dice <- sample(x, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 If you remove the # signs, it produces an error because the object `bones` cannot be found by the function.
@@ -279,23 +365,34 @@ To supply `bones`, put the object name bones as an argument in the parentheses t
 Now `roll2()` will work as long as you provide a value or values for `bones` each time you call it:
 
 ```{r}
-
+roll2 <- function(bones) {
+  dice <- sample(bones, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 Because there is only one argument, `bones`, we do not need to name it for R to match the values:
 
 ```{r}
+roll2(bones = 1:4)
 
+roll2(bones = 1:6)
+
+
+roll2(1:20)
 ```
 
 roll2() will still give an error if you do not supply `bones` at all. You can prevent this by assigning a default value when writing the function:
 
 ```{r}
-
+roll2(0)
 ```
 
 ```{r}
-
+roll2 <- function(bones = 1:6) {
+  dice <- sample(bones, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 You can give your functions as many arguments as you like, just list their names, separated by a comma.
@@ -307,13 +404,16 @@ If you are working in the script window of RStudio you can create a function fro
 Test it out with the three lines of code from the body of code in our `roll()` function:
 
 ```{r}
-
+roll2 <- function(bones = 1:6) {
+  dice <- sample(bones, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 After you've done it, your code should update to look like this:
 
 ```{r}
-
+roll2()
 ```
 
 You should now have a familiarity with:
@@ -347,39 +447,51 @@ We will try using the `qplot` function which comes from the *ggplot2* package, a
 First, install the package with the following function:
 
 ```{r}
-
+install.packages("ggplot2")
 ```
 
 `qplot` won't work without loading it:
 
 ```{r}
-
+library(ggplot2)
+qplot
 ```
 
 To load an installed package use:
 
 ```{r}
-
+library(ggplot2)
 ```
 
 And look at `qplot`:
 
 ```{r}
-
+qplot
 ```
 
 `qplot` makes "quick plots". Let's test it out by defining some x and y values:
 
 ```{r}
+x <- c(-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1)
+x
+## -1.0 -0.8 -0.6 -0.4 -0.2  0.0  0.2  0.4  0.6  0.8  1.0
 
+y <- x^3
+y
+## -1.000 -0.512 -0.216 -0.064 -0.008  0.000  0.008
+##  0.064  0.216  0.512  1.000
+
+qplot(x, y)
 ```
 
 ```{r}
-
+x <- c(1, 2, 2, 2, 3, 3)
+qplot(x, binwidth = 1)
 ```
 
 ```{r}
-
+x2 <- c(1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4)
+qplot(x2, binwidth = 1)
 ```
 
 Notice how R matches the order of values in the vector `x` with the order of values in vector `y`? 
@@ -389,7 +501,8 @@ This is known as *element-wise execution*.
 We can also make a histogram by just providing one vector of values:
 
 ```{r}
-
+x3 <- c(0, 1, 1, 2, 2, 2, 3, 3, 4)
+qplot(x3)
 ```
 
 The notation for describing this histogram intervals looks like: `[1, 2)`
@@ -400,14 +513,12 @@ For example, in the histogram above, there are three values in the interval `[2,
 
 Let's try another example:
 
-```{r}
 
-```
 
 And another:
 
 ```{r}
-
+qplot(x2)
 ```
 
 You can use a histogram to display visually how common different values of `x` are.
@@ -415,7 +526,10 @@ You can use a histogram to display visually how common different values of `x` a
 Let's try visualizing many the *replicated* output of `roll()` (many dice rolls):
 
 ```{r}
+replicate(3, 1 + 1)
 
+replicate(10, roll())
+```
 ```
 
 ```{r}
