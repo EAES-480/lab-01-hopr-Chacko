@@ -18,7 +18,7 @@ student_netid <- "echac2"  # e.g., "jdoe23"
 
 # REQUIRED: confirm you completed Chapters 1–8 of HOPR in this file
 # Put the chapter numbers you completed (should be 1:8 when finished).
-hopr_completed_chapters <- integer(1:7)  # e.g., 1:8
+hopr_completed_chapters <- 1:8  # e.g., 1:8
 
 # OPTIONAL but encouraged: notes about anything that was confusing or interesting
 reflection_notes <- ""  # a sentence or two is fine
@@ -1572,7 +1572,7 @@ We will use these new skills to change the point system of the deck.
 Make a copy of the deck so you can always reload the pristine version:
 
 ```{r}
-
+deck2 <- deck
 ```
 
 #### Changing Values in Place
@@ -1580,25 +1580,34 @@ Make a copy of the deck so you can always reload the pristine version:
 Start by creating a simple vector of zeros:
 
 ```{r}
-
+vec <- c(0, 0, 0, 0, 0, 0)
+vec
 ```
 
 Select the first value using hard brackets:
 
 ```{r}
-
+vec[1]
 ```
 
 Try modifying the first value with the assignment operator `<-` :
 
 ```{r}
+vec[1] <- 1000
+vec
 
 ```
 
 You can replace multiple values, as long as the number of new values ==  number of selected values:
 
 ```{r}
+vec[c(1, 3, 5)] <- c(1, 1, 1)
+vec
+##  1 0 1 0 1 0
 
+vec[4:6] <- vec[4:6] + 1
+vec
+## 1 0 1 1 2 1
 ```
 
 Whereas this will not work: 
@@ -1610,19 +1619,25 @@ Whereas this will not work:
 You can also create new values that do not exist yet, by expanding the object:
 
 ```{r}
-
+vec[7] <- 0
+vec
+## 1 0 1 1 2 1 0
 ```
 
 Try adding a new variable to your data set using `$`:
 
 ```{r}
+deck2$new <- 1:52
 
+head(deck2)
 ```
 
 Then try removing it with the symbol `NULL`:
 
 ```{r}
+deck2$new <- NULL
 
+head(deck2)
 ```
 
 Let's create a "War Deck", for which aces have the value, 14 rather than 1.
@@ -1630,32 +1645,40 @@ Let's create a "War Deck", for which aces have the value, 14 rather than 1.
 First, use R's notiation system to identify the aces:
 
 ```{r}
-
+deck2[c(13, 26, 39, 52), ]
 ```
 
 You can also single out just the value of the aces (in the 3rd column of deck2):
 
 ```{r}
+deck2[c(13, 26, 39, 52), 3]
+## 1 1 1 1
 
+deck2$value[c(13, 26, 39, 52)]
+## 1 1 1 1
 ```
 
 And do it more efficiently with a vector:
 
 ```{r}
+deck2$value[c(13, 26, 39, 52)] <- c(14, 14, 14, 14)
 
+# or
+
+deck2$value[c(13, 26, 39, 52)] <- 14
 ```
 
 Now reassign the aces to 14:
 *Hint*: You can use a vector of 14s, or just one 14 which R will recycle to all elements.
 
 ```{r}
-
+head(deck2, 13)
 ```
 
 Notice the values change "in place".
 
 ```{r}
-
+deck3 <- shuffle(deck)
 ```
 
 The same technique works for vectors, matrices, arrays, lists, and data frames!
@@ -1665,7 +1688,7 @@ In this example, we knew where the aces were but if the deck was shuffled, how w
 Shuffle the deck and save it as deck3:
 
 ```{r}
-
+head(deck3)
 ```
 
 Now the aces are hard to find!
@@ -1675,7 +1698,11 @@ Now the aces are hard to find!
 Logical subsettingcan be used to return elements that match a TRUE:
 
 ```{r}
+vec
+## 1 0 1 1 2 1 0
 
+vec[c(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE)]
+## 2
 ```
 
 However, you don't have to type out a long vector of T and F. Use a *Logical Test* using logical operators:
@@ -1690,13 +1717,30 @@ E.g.,use the operators:
  + `%in%` exists within the vector (this one is very handy!)
 
 ```{r}
+1 > 2
+## FALSE
 
+1 > c(0, 1, 2)
+## TRUE FALSE FALSE
+
+c(1, 2, 3) == c(3, 2, 1)
+## FALSE  TRUE FALSE
 ```
 
 Note: `%in%` does not use element-wise execution, it asks *are the values on the left are on the right side?*:
 
 ```{r}
+1 %in% c(3, 4, 5)
+## FALSE
 
+c(1, 2) %in% c(3, 4, 5)
+## FALSE FALSE
+
+c(1, 2, 3) %in% c(3, 4, 5)
+## FALSE FALSE  TRUE
+
+c(1, 2, 3, 4) %in% c(3, 4, 5)
+## FALSE FALSE  TRUE  TRUE
 ```
 
 Remember: `=` is the same as the assignment operateor `<-` in R. Be careful to use `==` when you want to evaluate equivalence (is equal).
@@ -1705,43 +1749,48 @@ Remember: `=` is the same as the assignment operateor `<-` in R. Be careful to u
 
 First convert desk faces to characters:
 ```{r}
-
+deck2$face
 ```
 
 Now perform the *logical test*:
 
 ```{r}
-
+deck2$face == "ace"
 ```
 
 You can also count the number of TRUE (treated as 1):
 
 ```{r}
-
+sum(deck2$face == "ace")
 ```
 
 You can also use this on your shuffled `deck3`, to the same effect:
 
 ```{r}
-
+deck3$face == "ace"
 ```
 
 The logical operator now provides row *indices* to extract rows or individual elements:
 
 ```{r}
-
+deck3$value[deck3$face == "ace"]
 ```
 
 Now use the assignment as before to change the values of ace to 14:
 
 ```{r}
+deck3$value[deck3$face == "ace"] <- 14
 
+head(deck3)
 ```
 
 Check to see if aces now have value of 14:
 
 ```{r}
+deck4 <- deck
+deck4$value <- 0
 
+head(deck4, 13)
 ```
 
 They do!
@@ -1751,31 +1800,31 @@ Logical subsetting is a key component of vectorized programming, a coding style 
 Let's adapt the deck for Hearts, where every card has a value of zero, except suit of hearts, which has a value of 1.
 
 ```{r}
-
+deck4$suit == "hearts"
 ```
 
 To assign 1 to every card in deck4 that has a suit of hearts, first find the hearts:
 
 ```{r}
-
+deck4$value[deck4$suit == "hearts"]
 ```
 
 Check the subset is correct:
 
 ```{r}
-
+deck4$value[deck4$suit == "hearts"] <- 1
 ```
 
 Assign the new value of 1:
 
 ```{r}
-
+deck4$value[deck4$suit == "hearts"]
 ```
 
 Finally, change the queen of spades to value of 13. Let's find the queen of spades:
 
 ```{r}
-
+deck4[deck4$face == "queen", ]
 ```
 
 We can't do it with this code! The first line gives all queens and the second line gives all spades. 
@@ -1796,6 +1845,18 @@ There are six Boolean operators:
 Remember to include the complete test on both sides of the Boolean operator:
 
 ```{r}
+a <- c(1, 2, 3)
+b <- c(1, 2, 3)
+c <- c(1, 2, 4)
+
+a == b
+##  TRUE TRUE TRUE
+
+b == c
+##  TRUE  TRUE FALSE
+
+a == b & b == c
+##  TRUE  TRUE FALSE
 
 ```
 
@@ -1805,17 +1866,22 @@ If you remove the # sign, the last line gives an error when you try to run it be
 Boolean opeartors follow the same element-wise execution:
 
 ```{r}
-
+deck4$face == "queen" & deck4$suit == "spades"
 ```
 
 ```{r}
-
+queenOfSpades <- deck4$face == "queen" & deck4$suit == "spades"
 ```
 
 Use Boolean operator to locate the queen of spades:
 
 ```{r}
+deck4[queenOfSpades, ]
+##  face   suit value
+## queen spades     0
 
+deck4$value[queenOfSpades]
+## 0
 ```
 
 Note that we join the two logical tests with a Boolean operator.
@@ -1823,13 +1889,20 @@ Note that we join the two logical tests with a Boolean operator.
 Save the results to its own object to make it easier to work with:
 
 ```{r}
+deck4$value[queenOfSpades] <- 13
 
+deck4[queenOfSpades, ]
+##  face   suit value
+## queen spades     13
 ```
 
 Make sure it works:
 
 ```{r}
+shuffle(deck4)
 
+
+deck4[queenOfSpades, ]
 ```
 
 Now assign the new value:
@@ -1841,31 +1914,42 @@ Now assign the new value:
 Set up some new objects to try out more logical tests:
 
 ```{r}
-
+w <- c(-1, 0, 1)
+x <- c(5, 15)
+y <- "February"
+z <- c("Monday", "Tuesday", "Friday")
 ```
 
 Is w positive?
 
 ```{r}
-
+w > 0
+10 < x & x < 20
+y == "February"
+all(z %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
+  "Saturday", "Sunday"))
 ```
 
 Is x greater than 10 and less than 20?
 
 ```{r}
+deck5 <- deck
 
+head(deck5, 13)
 ```
 
 Is object y the word February?
 
 ```{r}
+facecard <- deck5$face %in% c("king", "queen", "jack")
+
 
 ```
 
 Is every value in z a day of the week?
 
 ```{r}
-
+deck5[facecard, ]
 ```
 
 
@@ -1874,6 +1958,8 @@ Finally, let's create a card deck to play Blackjack, where all face cards have a
 Start by creating a new deck:
 
 ```{r}
+deck5$value[facecard] <- 10
+
 
 ```
 
@@ -1881,19 +1967,19 @@ Change the value of face cards in none fell swoop with `%in%`.
 
 First identify the indices:
 ```{r}
-
+head(deck5, 13)
 ```
 
 Then conver the values: 
 
 ```{r}
-
+head(deck5, 13)
 ```
 
 Check:
 
 ```{r}
-
+head(deck5, 13)
 ```
 
 Right now, we don't have enough information to assign the ace a value (it depends on the player's other cards)!
@@ -1903,43 +1989,51 @@ Right now, we don't have enough information to assign the ace a value (it depend
 In R, `NA` stands for "Not Available" and is used as a placeholder for missing values. Because we do not know what `NA` is, it will propogate through any calculations:
 
 ```{r}
-
+1 + NA
 ```
 
 Missing values `NA` help you maintain complete data structure rather than having gaps. However they also propogate to other compuations:
 
 ```{r}
-
+NA == 1
 ```
 
 Most R functions come with an optional argument, `na.rm`, which stands for `NA` remove. If `na.rm = TRUE`, it will ignore `NA`s:
 
 ```{r}
+c(NA, 1:50)
+## NA  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
+## 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33
+## 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
 
+mean(c(NA, 1:50))
+## NA
 ```
 
 Again, because we don't know what `NA` is, we also can't identify it using logical tests (remove # sign):
 
 ```{r}
-
+mean(c(NA, 1:50), na.rm = TRUE)
+## 25.5
 ```
 
 But, R uses the function `is.na()` to identify if a value is an `NA`:
 
 ```{r}
-
+NA == NA
 ```
 
 Use `is.na()` to identify the index of `NA` in a data structure such as a vector:
 
 ```{r}
-
+is.na(NA)
 ```
 
 So, finally, set all ace values to `NA`, because we don't know the real value until the end of a players turn:
 
 ```{r}
-
+vec <- c(1, 2, 3, NA)
+is.na(vec)
 ```
 
 You should now have a familiarity with:
@@ -1973,7 +2067,17 @@ To finalize the functions `deal()` and `shuffle()` we need to consider how R use
 R saves every object inside of an environment, a list-like object that resembles a computer folder. Each environment is connected to a hierarchy of environments. You can see R's environment system with:
 
 ```{r}
+deal(deck)
+## face   suit value
+## king spades    13
 
+deal(deck)
+## face   suit value
+## king spades    13
+
+deal(deck)
+## face   suit value
+## king spades    13
 ```
 
 The environments are ranked from "lowest" to "highest". The highest environment being `R_EmptyEnv` and lowest environment being `R_GlobalEnv`.
@@ -1988,7 +2092,8 @@ Although seemingly like a folder directory hierarchy there are two main differen
 Look at an environment:
 
 ```{r}
-
+library(pryr)
+parenvs(all = TRUE)
 ```
 
 Which shows the path too.
@@ -1996,43 +2101,55 @@ Which shows the path too.
 Three environments come with their own accessor functions:
 
 ```{r}
-
+as.environment("package:stats")
 ```
 
 Look up an environment's parent with:
 
 ```{r}
+globalenv()
+## <environment: R_GlobalEnv>
 
+baseenv()
+## <environment: base>
+
+emptyenv()
+##<environment: R_EmptyEnv>
 ```
 
 Notice that the highest environment has no parent:
 
 ```{r}
-
+parent.env(globalenv())
 ```
 
 You can view objects saved in an environment with:
 
 ```{r}
-
+#parent.env(emptyenv())
 ```
 
 Load the deck again to check:
 
 ```{r}
+ls(emptyenv())
+## character(0)
 
+ls(globalenv())
 ```
 
 And learn more about the environment structure:
 
 ```{r}
-
+head(globalenv()$deck, 3)
 ```
 
 The base environment has many objects:
 
 ```{r}
+assign("new", "Hello Global", envir = globalenv())
 
+globalenv()$new
 ```
 
 RStudio's environment pane displays all the objects in your global environment.
@@ -2040,13 +2157,17 @@ RStudio's environment pane displays all the objects in your global environment.
 You can use the `$` syntax to access the `deck` object from the global environment accessor:
 
 ```{r}
+assign("new", "Hello Global", envir = globalenv())
 
+globalenv()$new
 ```
 
 You can also use the `assign()` function to save an object into an environment:
 
 ```{r}
+assign("new", "Hello Global", envir = globalenv())
 
+globalenv()$new
 ```
 
 Assign works similar to <-.
@@ -2056,7 +2177,7 @@ Assign works similar to <-.
 Check the active environment using:
 
 ```{r}
-
+environment()
 ```
 
 This is usual unless you are running a function. Any object you create at the command line will be saved in the global environment. Think of it as your user work space.
@@ -2072,7 +2193,7 @@ in the environment tree.
 **Assignment**: Assigning an object a new value will overwrite it:
 
 ```{r}
-
+new
 ```
 
 But when functions are called, *R creates a new active environment to evaluate the function in* because temporary objects within the function could otherwise overwrite global environment objects.
@@ -2080,44 +2201,55 @@ But when functions are called, *R creates a new active environment to evaluate t
 **Evaluation**: Temporary environments for function runs are called *run time environments*. Let's write a function to show what environments look like:
 
 ```{r}
+new <- "Hello Active"
 
+new
 ```
 
 `show_env()` is a function, so when it is called, R creates a run time environment. The results of `show_env()` will therefore show the details of the run time environment:
 
 ```{r}
-
+roll <- function() {
+  die <- 1:6
+  dice <- sample(die, size = 2, replace = TRUE)
+  sum(dice)
+}
 ```
 
 Notice R created a new environment `0x7f8bf05382b0`to run `show_env()`. It contained no objects, and its parent environment was the global environment. If you run it again, you'll see it creates a new but otherwise identical temporary environment:
 
 ```{r}
-
+show_env <- function(){
+  list(ran.in = environment(), 
+    parent = parent.env(environment()), 
+    objects = ls.str(environment()))
+}
 ```
 R will connect a function's run-time environment to the environment that the function was *first created in*.
 
 Look up a functions origin environment to show it was created in the global environment:
 
 ```{r}
-
+show_env()
 ```
 
 But the origin environment can also be a parent environment:
 
 ```{r}
-
+show_env()
 ```
 
 Create some objects within the `show_env()` function:
 
 ```{r}
-
+environment(show_env)
 ```
 
 The objects `a-c` are stored in a safe, out-of-the-way run-time environment.
 A function with arguments will copy the objects to the runtime environment:
 
 ```{r}
+environment(parenvs)
 
 ```
 
@@ -2140,7 +2272,14 @@ So, how to fix `deal()` and `shuffle()`?
 Redefine `deal()` (to deal the top card of the deck):
 
 ```{r}
-
+show_env <- function(){
+  a <- 1
+  b <- 2
+  c <- 3
+  list(ran.in = environment(), 
+    parent = parent.env(environment()), 
+    objects = ls.str(environment()))
+}
 ```
  
 It still works even without the `cards` argument which copies over the deck because the run-time environment scopes up to the global environment (parent of the active function environment) to look for `deck`.
@@ -2149,77 +2288,140 @@ We want `deal()` to remove the top card after dealing it.
 
 Save a pristine `deck`:
 ```{r}
-
+show_env()
 ```
 
 Remember how to remove the top card using a negative dataframe index:
 
 ```{r}
+foo <- "take me to your runtime"
 
+show_env <- function(x = foo){
+  list(ran.in = environment(), 
+    parent = parent.env(environment()), 
+    objects = ls.str(environment()))
+}
+
+show_env()
 ```
 Now apply it to `deal()`:
 
 ```{r}
-
+deal <- function() {
+  deck[1, ]
+}
 ```
 
 What's wrong here? R only removes the top card in the run-time environment. We need to assign `deck[-1, ]` to an object named `deck` in the global environment:
 
 ```{r}
-
+environment(deal)
 ```
 
 Now lets finalize `shuffle()`:
 
 ```{r}
-
+deal()
 ```
 
 Remember that `shuffle()` returns a shuffled object, rather than shuffling `deck`:
 
 ```{r}
+deal()
+##  face   suit value
+##  king spades    13
 
+deal()
+##  face   suit value
+##  king spades    13
 ```
 
 Rewrite `shuffle()` so it replaces deck with a shuffled `DECK` (in the global environment). It should have no assignments and return no output:
 
 ```{r}
+DECK <- deck
 
+deck <- deck[-1, ]
+
+head(deck, 3)
 ```
 
 Check it works:
 
 ```{r}
-
+deal <- function() {
+  card <- deck[1, ]
+  deck <- deck[-1, ]
+  card
+}
 ```
 
 Now we can shuffle the cards and deal a hand of blackjack:
 
 ```{r}
-
+deal <- function() {
+  card <- deck[1, ]
+  assign("deck", deck[-1, ], envir = globalenv())
+  card
+}
 ```
 
 Restore `deck` again:
 
 ```{r}
+deal()
+##  face   suit value
+## queen spades    12
 
+deal()
+## face   suit value
+## jack spades    11
+
+deal()
+## face   suit value
+##  ten spades    10
 ```
 To save objects in a safe place, such as a run time environment, create a function that takes `deck` as an argument, saves a copy as `DECK` and its own copies of `deal()` and `shuffle()`:
 
 ```{r}
+shuffle <- function(cards) { 
+  random <- sample(1:52, size = 52)
+  cards[random, ]
+}
 
 ```
 
 When you run `setup()`, R will create a run-time environment to store the objects in:
 
 ```{r}
+head(deck, 3)
+##  face   suit value
+##  nine spades     9
+## eight spades     8
+## seven spades     7
 
+a <- shuffle(deck)
+
+head(deck, 3)
+##  face   suit value
+##  nine spades     9
+## eight spades     8
+## seven spades     7
+
+head(a, 3)
+##  face     suit value
+##   ace diamonds     1
+## seven    clubs     7
+##   two    clubs     2
 ```
 
 However they are now hard to use. Change `setup()` to return `DEAL` and `SHUFFLE` using a list:
 
 ```{r}
-
+shuffle <- function(){
+  random <- sample(1:52, size = 52)
+  assign("deck", DECK[random, ], envir = globalenv())
+}
 ```
 
 Now the functions are returned in a list when you run `setup()`. 
@@ -2227,13 +2429,34 @@ Now the functions are returned in a list when you run `setup()`.
 You can assign it to a new object in the global environment:
 
 ```{r}
+shuffle()
 
+deal()
+##  face   suit value
+## queen hearts    12
+
+deal()
+##  face   suit value
+## eight hearts     8
 ```
 
 And save each element to its own object:
 
 ```{r}
+setup <- function(deck) {
+  DECK <- deck
 
+  DEAL <- function() {
+    card <- deck[1, ]
+    assign("deck", deck[-1, ], envir = globalenv())
+    card
+  }
+
+  SHUFFLE <- function(){
+    random <- sample(1:52, size = 52)
+    assign("deck", DECK[random, ], envir = globalenv())
+ }
+}
 ```
 
 Notice the origin environment is now the run-time environment R made when you ran `setup()`. R will always be able to find `DECK` and `deck,` but without altering them:
@@ -2243,29 +2466,83 @@ This arrangement is called *closure*: Setup's run-time environment "encloses" th
 Try running them:
 
 ```{r}
+setup <- function(deck) {
+  DECK <- deck
 
+  DEAL <- function() {
+    card <- deck[1, ]
+    assign("deck", deck[-1, ], envir = globalenv())
+    card
+  }
+
+  SHUFFLE <- function(){
+    random <- sample(1:52, size = 52)
+    assign("deck", DECK[random, ], envir = globalenv())
+ }
+
+ list(deal = DEAL, shuffle = SHUFFLE)
+}
+
+cards <- setup(deck)
 ```
 Notice the global `deck` is still being updated. Change the `envir` argument in assign to reference the parent environment which is setup's run-time environment (the "enclosing" environment):
 
 ```{r}
-
+deal <- cards$deal
+shuffle <- cards$shuffle
 ```
 
 Now `deck` should remain unchanged:
 
 ```{r}
+deal
+## function() {
+##     card <- deck[1, ]
+##     assign("deck", deck[-1, ], envir = globalenv())
+##     card
+##   }
+## <environment: 0x7ff7169c3390>
 
+shuffle
+## function(){
+##     random <- sample(1:52, size = 52)
+##     assign("deck", DECK[random, ], envir = globalenv())
+##  }
+## <environment: 0x7ff7169c3390>
 ```
 
 Notice you can now assign a shuffled deck to a new object without changing deck:
 
 ```{r}
+environment(deal)
+## <environment: 0x7ff7169c3390>
 
+environment(shuffle)
+## <environment: 0x7ff7169c3390>
 ```
 Now `shuffle()` gives a new shuffled deck, but doesn't alter global environment deck because the functions now only alter deck in the enclosed (`setup()`) run-time environment. You can remove the global environment copy of deck and play with just the cards functions:
 
 ```{r}
+setup <- function(deck) {
+  DECK <- deck
 
+  DEAL <- function() {
+    card <- deck[1, ]
+    assign("deck", deck[-1, ], envir = parent.env(environment()))
+    card
+  }
+
+  SHUFFLE <- function(){
+    random <- sample(1:52, size = 52)
+    assign("deck", DECK[random, ], envir = parent.env(environment()))
+ }
+
+ list(deal = DEAL, shuffle = SHUFFLE)
+}
+
+cards <- setup(deck)
+deal <- cards$deal
+shuffle <- cards$shufflex
 ```
 
 The real value of this knowledge is knowing how to diagnose function errors/behavior.
@@ -2302,19 +2579,31 @@ In this chapter we will build a real, working slot machine by running an R funct
 Let's start with a function that randomly selects 3 symbols:
 
 ```{r}
+#play()
 
 ```
 
 The goal is to arrive at this function where `score()` is a function that looks up a symbol combination for a score, as if you were playing a slot machine:
 
 ```{r}
-
+get_symbols <- function() {
+  wheel <- c("DD", "7", "BBB", "BB", "B", "C", "0")
+  sample(wheel, size = 3, replace = TRUE, 
+    prob = c(0.03, 0.03, 0.06, 0.1, 0.25, 0.01, 0.52))
+}
 ```
 
 For now, if you remove the `#` sign to try to execute `play()` it will return an error that the function `score()` doesn't exist:
 
 ```{r}
+get_symbols()
+## "BBB" "0"   "C"  
 
+get_symbols()
+## "0" "0" "0"
+
+get_symbols()
+## "7" "0" "B"
 ```
 
 Strategy is required for complex coding tasks. Here is a suggested strategy.
@@ -2322,7 +2611,8 @@ Strategy is required for complex coding tasks. Here is a suggested strategy.
 1) **Sequential Steps** Break the task down into steps:
 
 ```{r}
-
+#score(c("DD", "DD", "DD"))
+## 800
 ```
 
 2) **Parallel cases** Spot groups of similar cases within a task.
@@ -2339,27 +2629,53 @@ In R, **if statements** are useful for parallel cases. An **if statement** tells
 For example:
 
 ```{r}
+play <- function() {
 
+  # step 1: generate symbols
+  symbols <- get_symbols()
+
+  # step 2: display the symbols
+  print(symbols)
+
+  # step 3: score the symbols
+  score(symbols)
+}
 ```
 
 If statements have to evaluate to a *single* T or F. You can condense vectors of logical values to single T or F with functions "any" and "all":
 
 ```{r}
-
+if (this) {
+  that
+}
 ```
 
 ```{r}
-
+if (num < 0) {
+  num <- num * -1
+}
 ```
 
 ```{r}
+num <- -2
 
+if (num < 0) {
+  num <- num * -1
+}
+
+num
 ```
 
 You can also add more lines between the braces:
 
 ```{r}
+num <- 4
 
+if (num < 0) {
+  num <- num * -1
+}
+
+num
 ```
 
 **else statements** `else` is a counterpart to `if`, that extends if to include a second case when the conditions is FALSE:
@@ -2373,21 +2689,48 @@ You can also add more lines between the braces:
 For example you may want to round a decimal to the nearest integer. `trunc()` takes a number and returns portion left of decimal place:
 
 ```{r}
+num <- -1
 
+if (num < 0) {
+  print("num is negative.")
+  print("Don't worry, I'll fix it.")
+  num <- num * -1
+  print("Now num is positive.")
+}
+## "num is negative."
+## "Don't worry, I'll fix it."
+## "Now num is positive."
+
+num
 ```
 
 ```{r}
-
+x <- 1
+if (3 == 3) {
+  x <- 2
+}
+x
 ```
 
 ```{r}
-
+x <- 1
+if (TRUE) {
+  x <- 2
+}
+x
 ```
 
 If you need more than two mutually exclusive cases, string two `else` statements together:
 
 ```{r}
-
+x <- 1
+if (x == 1) {
+  x <- 2
+  if (x == 1) {
+    x <- 3
+  }
+}
+x
 ```
 
 If two `if` statements describe mutually exclusive events (i.e. cannot occur together) it is better to join with `else if` rather than list separately, which lets R ignore the second statement if the first is TRUE.
@@ -2395,7 +2738,11 @@ If two `if` statements describe mutually exclusive events (i.e. cannot occur tog
 Let's apply these rules to our slot machine example, breaking it into 8 steps:
 
 ```{r}
-
+#if (this) {
+ # PlanA
+#} else {
+ # PlanB
+#}
 ```
 
 You could try and code it all at once but its easier to start with a concrete example for each step.
@@ -2403,7 +2750,7 @@ You could try and code it all at once but its easier to start with a concrete ex
 1) All the same:
 
 ```{r}
-
+a <- 3.14
 ```
 
 Define a formal sub-task: "test whether the symbols are three of a kind"
@@ -2420,14 +2767,22 @@ A faster approach (to build up to over time) would be:
 Now assign the three of a kind test to an object and add to the slot machine skeleton:
 
 ```{r}
-
+dec <- a - trunc(a)
+dec
 ```
 Note: `&&` or `||` speed up evaluation by skipping the second test if the first is not `TRUE`
 
 Add step 1 to our skeleton code:
 
 ```{r}
+if (dec >= 0.5) {
+  a <- trunc(a) + 1
+} else {
+  a <- trunc(a)
+}
 
+a
+## 3
 ```
 
 Next formal sub-task: "symbols are all of type bar"
@@ -2438,17 +2793,39 @@ Here you would need `|` "or" operators for the different cases of "B", "BB", "BB
 However, `%in%` is a more efficient approach to replace multiple `|`:
 
 ```{r}
+a <- 1
+b <- 1
 
+if (a > b) {
+  print("A wins!")
+} else if (a < b) {
+  print("B wins!")
+} else {
+  print("Tie.")
+}
 ```
 
 Now add the third step (bars):
 
 ```{r}
+#if ( # Case 1: all the same <1>) {
+#  prize <- # look up the prize <3>
+#} else if ( # Case 2: all bars <2> ) {
+#  prize <- # assign $5 <4>
+#} else {
+  # count cherries <5>
+#  prize <- # calculate a prize <7>
+#}
 
 ```
 
 ```{r}
+score <- function(symbols) {
 
+  # calculate a prize
+
+  prize
+}
 ```
 
 Now we want to assign prizes to the different symbol combinations. To do so efficiently, we need to use **lookup tables**.
@@ -2459,56 +2836,91 @@ Now we want to assign prizes to the different symbol combinations. To do so effi
 Before we look at lookup tables, we can reconsider subsetting a vector:
 
 ```{r}
-
+symbols <- c("7", "7", "7")
 ```
 
 If you only want the value, without the name:
 
 ```{r}
-
+symbols <- c("B", "BB", "BBB")
+symbols <- c("C", "DD", "0")
 ```
 
 You can also index using numeric values:
 
 ```{r}
+symbols
+##  "7" "7" "7"
 
+symbols[1] == symbols[2] & symbols[2] == symbols[3]
+## TRUE
+
+symbols[1] == symbols[2] & symbols[1] == symbols[3]
+## TRUE
+
+all(symbols == symbols[1])
+## TRUE
 ```
 
 Now we can add code to look up the value for 3 of a kind:
 
 ```{r}
-
+length(unique(symbols) == 1)
 ```
 
 
 We can also add the second case which is simply $5:
 
 ```{r}
-
+#same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+#
+#if (same) {
+#  prize <- # look up the prize
+#} else if ( # Case 2: all bars ) {
+#  prize <- # assign $5
+#} else {
+#  # count cherries
+#  prize <- # calculate a prize
+#}
 ```
 
 For the 3rd case, we need to compute how many cherries are in symbols:
 
 ```{r}
+symbols <- c("B", "BBB", "BB")
 
 ```
 
 Create a test to identify which elements of symbols are "C":
 
 ```{r}
-
+symbols[1] == "B" | symbols[1] == "BB" | symbols[1] == "BBB" &
+  symbols[2] == "B" | symbols[2] == "BB" | symbols[2] == "BBB" &
+  symbols[3] == "B" | symbols[3] == "BB" | symbols[3] == "BBB"
+## TRUE
 ```
 
 How might you count the number of Cs? (remember coercion rules):
 
 ```{r}
-
+all(symbols %in% c("B", "BB", "BBB"))
+## TRUE
 ```
 
 We can also add the first part of the third case to the code:
 
 ```{r}
+#same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+#bars <- symbols %in% c("B", "BB", "BBB")
 
+#if (same) {
+#  prize <- # look up the prize
+#} else if (all(bars)) {
+#  prize <- # assign $5
+#} else {
+#  # count cherries
+#  prize <- # calculate a prize
+#}
 ```
 
 3 cherries are already covered by case 1. 
@@ -2517,31 +2929,60 @@ We can also add the first part of the third case to the code:
 We could write an inefficient 'if' tree:
 
 ```{r}
-
+symbols <- c("B", "B", "B")
+all(symbols %in% c("B", "BB", "BBB"))
+## TRUE
 ```
 
 But a lookup table is faster
 
 ```{r}
-
+if (same) {
+  symbol <- symbols[1]
+  if (symbol == "DD") {
+    prize <- 800
+  } else if (symbol == "7") {
+    prize <- 80
+  } else if (symbol == "BBB") {
+    prize <- 40
+  } else if (symbol == "BB") {
+    prize <- 5
+  } else if (symbol == "B") {
+    prize <- 10
+  } else if (symbol == "C") {
+    prize <- 10
+  } else if (symbol == "0") {
+    prize <- 0
+  }
+}
 ```
 
 Remember that cherries could equal 0, 1, or 2 (3 is already covered). If we use the value of cherries as the index, and cherries = 0, then will return nothing:
 
 ```{r}
-
+payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, 
+  "B" = 10, "C" = 10, "0" = 0)
+payouts
 ```
 
 So we need to offset the indexing by 1:
 
 ```{r}
+payouts["DD"]
+##  DD 
+## 100 
+
+payouts["B"]
+##  B
+## 10
 
 ```
 
 We can also add the second part of the third case to the code:
 
 ```{r}
-
+unname(payouts["DD"])
+## 100 
 ```
 
 You can usually avoid `if` trees by using lookup tables (but not always).
@@ -2559,12 +3000,36 @@ Formal sub-task: "double prize for every diamond present"
 English: an object named prize will be multiplied by 2 raised to a number that equals the number of diamonds contained in the symbols vector
 
 ```{r}
+symbols <- c("7", "7", "7")
+symbols[1]
+## "7"
 
+payouts[symbols[1]]
+##  7 
+## 80 
+
+symbols <- c("C", "C", "C")
+payouts[symbols[1]]
+##  C 
+## 10 
 ```
 
 W can now add the last code line:
 
 ```{r}
+same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+bars <- symbols %in% c("B", "BB", "BBB")
+
+#if (same) {
+#  payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, 
+#    "B" = 10, "C" = 10, "0" = 0)
+#  prize <- unname(payouts[symbols[1]])
+#} else if (all(bars)) {
+#  prize <- # assign $5
+#} else {
+  # count cherries
+#  prize <- # calculate a prize
+#}
 
 ```
 
@@ -2572,12 +3037,26 @@ Congrats! You now have a working `score()` script you can save to a function!
 
 First, let's add some comments to the code to show what each section does:
 ```{r}
+same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+bars <- symbols %in% c("B", "BB", "BBB")
+
+#if (same) {
+  payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, 
+    "B" = 10, "C" = 10, "0" = 0)
+  prize <- unname(payouts[symbols[1]])
+} else if (all(bars)) {
+#  prize <- 5
+#} else {
+  # count cherries
+#  prize <- # calculate a prize
+#}
 
 ```
 
 Now wrap it in a function (remember what arguments (inputs) it will need):
 
 ```{r}
+symbols <- c("C", "DD", "C")
 
 ```
 
@@ -2586,13 +3065,13 @@ Notice because we did not assign the final prize value to an object, it outputs 
 You can now combine it with the play function:
 
 ```{r}
-
+symbols == "C"
 ```
 
 Now you can play with your slot machine:
 
 ```{r}
-
+sum(symbols == "C")
 ```
 
 **Congrats!** You've now finished Chapter 7!
@@ -2633,7 +3112,7 @@ We will fix the slot machine in two ways:
 Notice the output of play is quite messy:
 
 ```{r}
-
+sum(symbols == "DD")
 ```
 
 You can fix both of these problems with the "S3 system".
@@ -2641,13 +3120,33 @@ You can fix both of these problems with the "S3 system".
 The S3 system governs how R handles objects of different classes. For example when you print a numeric object it looks like this:
 
 ```{r}
+same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+bars <- symbols %in% c("B", "BB", "BBB")
 
+#if (same) {
+ # payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, 
+#    "B" = 10, "C" = 10, "0" = 0)
+#  prize <- unname(payouts[symbols[1]])
+#} else if (all(bars)) {
+# prize <- 5
+#} else {
+ # cherries <- sum(symbols == "C")
+  #prize <- # calculate a prize
+#}
+
+#iamonds <- sum(symbols == "DD")
 ```
 
 Whereas if you give the number a POSIXct followed by POSIXt:
 
 ```{r}
-
+#if (cherries == 2) {
+#  prize <- 5
+#} else if (cherries == 1) {
+#  prize <- 2
+#} else {}
+#  prize <- 0
+#}
 ```
 
 R's S3 system applies for any object with a class and is built around 3 components:
@@ -2659,25 +3158,34 @@ R's S3 system applies for any object with a class and is built around 3 componen
 Attributes: extra information appended to an object. E.g. rows and column names appended to a dataframe object (and "data.frame" as a class)
 
 ```{r}
-
+c(0, 2, 5)
 ```
 
 You've already used:
 
 ```{r}
+#cherries + 1
+## 1
 
+c(0, 2, 5)[cherries + 1]
+## 0
 ```
 
 But there is also:
 
 ```{r}
+#cherries + 1
+## 2
 
+c(0, 2, 5)[cherries + 1]
+## 2
 ```
 
 You can assign an object a new attribute altogether:
 
 ```{r}
-
+##c(0, 2, 5)[cherries + 1]
+## 5
 ```
 
 R will let you add any attributes and often ignores them. R will only complain whenit needs an atribute and it is missing.
@@ -2685,7 +3193,21 @@ R will let you add any attributes and often ignores them. R will only complain w
 Look at the attributes of `one_play()`:
 
 ```{r}
+#same <- symbols[1] == symbols[2] && symbols[2] == symbols[3]
+#bars <- symbols %in% c("B", "BB", "BBB")
 
+#f (same) {
+#  payouts <- c("DD" = 100, "7" = 80, "BBB" = 40, "BB" = 25, 
+#    "B" = 10, "C" = 10, "0" = 0)
+#  prize <- unname(payouts[symbols[1]])
+#} else if (all(bars)) {
+#  prize <- 5
+#} else {
+#  cherries <- sum(symbols == "C")
+#  prize <- c(0, 2, 5)[cherries + 1]
+#}
+
+#diamonds <- sum(symbols == "DD")
 ```
 
 You can assign attributes with `attr()`. It takes two arguments: 
