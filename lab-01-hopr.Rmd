@@ -3979,14 +3979,27 @@ Check the computation time:
 
 ```{r}
 
+library(tibble)
+library(ggplot2)
+library(dplyr)
+
+# c) Simulate the process 1000 times
+# Exponential distribution with rate = 0.5 (mean = 2 inches)
+snow_sim <- rexp(1000, rate = 0.5)
+
+# d & e) Put into a tibble
+snow_df <- tibble(snowfall = snow_sim)
+
+# f) Plot histogram
+snow_df %>%
+  ggplot(aes(x = snowfall)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = "Simulated Daily Snowfall Amounts",
+    x = "Snowfall (inches)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
 ```
 
-You should now be familiar with:
-
-  1. Vectorized Code
-  2. How to Write Vectorized Code
-  3. How to Write Fast for Loops in R
-  4. Vectorized Code in Practice
-      + Loops Versus Vectorized Code
-
-**Congrats, you've finished chapter 10!**
