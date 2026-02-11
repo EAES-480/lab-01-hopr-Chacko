@@ -30,6 +30,8 @@ reflection_notes <- ""  # a sentence or two is fine
 
 ```
 
+> GRADE 12/10: Great work, and nice job completing the environments section. Note that you'd want to push repo .Rmd with any dependencies like the manually uploaded `deck.csv`.
+
 $~$
 
 ## Introduction
